@@ -1,0 +1,297 @@
+**********************Steps to start Cassandra************************
+ 
+1) Goto Bin directory of Cassandra, open command prompt then type Cassandra to start server and keep it running
+C:\Program Files\DataStax-DDC\apache-cassandra\bin>cassandra
+2) to start Client, Goto Bin directory of Cassandra, open command prompt then type cqlsh.
+it will show you cqlsh> prompt
+C:\Program Files\DataStax-DDC\apache-cassandra\bin>cqlsh
+--------------------------------------------------------
+CRUD operations on Cassandra
+--------------------------------------------------------
+cqlsh> CREATE KEYSPACE Birla WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+cqlsh> use birla;
+cqlsh> drop keyspace birla;
+cqlsh> DESC KEYSPACES
+
+system_traces  system_schema  system_auth  system  system_distributed
+
+cqlsh> CREATE KEYSPACE Birla WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+cqlsh> DESC KEYSPACES
+
+system_schema  system_auth  system  system_distributed  birla  system_traces
+
+cqlsh> use birla;
+cqlsh:birla>
+
+cqlsh:birla> CREATE TABLE emp( emp_id int PRIMARY KEY, emp_name text, emp_city text, emp_sal varint, emp_phone varint);
+cqlsh:birla> desc emp;
+
+CREATE TABLE birla.emp (
+    emp_id int PRIMARY KEY,
+    emp_city text,
+    emp_name text,
+    emp_phone varint,
+    emp_sal varint
+) WITH bloom_filter_fp_chance = 0.01
+
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city | emp_name | emp_phone | emp_sal
+--------+----------+----------+-----------+---------
+
+(0 rows)
+
+
+cqlsh:birla> INSERT INTO emp (emp_id, emp_name, emp_city,
+         ...    emp_phone, emp_sal) VALUES(1,'ram', 'Hyderabad', 9848022338, 50000);
+cqlsh:birla> insert into emp(emp_id, emp_name, emp_city,emp_phone, emp_sal) values(2,'Bhushan','Mumbai',25000,9702866777);
+cqlsh:birla> select * from emp
+         ... ;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+------------
+      1 | Hyderabad |      ram | 9848022338 |      50000
+      2 |    Mumbai |  Bhushan |      25000 | 9702866777
+
+(2 rows)
+cqlsh:birla> delete from emp where emp_id=2;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      1 | Hyderabad |      ram | 9848022338 |   50000
+
+(1 rows)
+
+cqlsh:birla> insert into emp(emp_id, emp_name, emp_city,emp_phone, emp_sal) values(3,'Ram','Pune',38000,70066777);
+cqlsh:birla> insert into emp(emp_id, emp_name, emp_city,emp_phone, emp_sal) values(4,'Pooja','Thane',76000,72106777);
+cqlsh:birla> insert into emp(emp_id, emp_name, emp_city,emp_phone, emp_sal) values(5,'Rakesh','Mumbai',28000,92106777);
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+----------
+      5 |    Mumbai |   Rakesh |      28000 | 92106777
+      1 | Hyderabad |      ram | 9848022338 |    50000
+      2 |    Mumbai |  Bhushan | 9702866777 |    25000
+      4 |     Thane |    Pooja |      76000 | 72106777
+      3 |      Pune |      Ram |      38000 | 70066777
+
+(5 rows)
+
+
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+----------
+      5 |    Mumbai |   Rakesh |      28000 | 92106777
+      1 | Hyderabad |      ram | 9848022338 |    50000
+      2 |    Mumbai |  Bhushan | 9702866777 |    25000
+      4 |     Thane |    Pooja |      76000 | 72106777
+      3 |      Pune |      Ram |      38000 | 70066777
+
+(5 rows)
+cqlsh:birla> UPDATE emp SET emp_city='Delhi' WHERE emp_id=2;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+----------
+      5 |    Mumbai |   Rakesh |      28000 | 92106777
+      1 | Hyderabad |      ram | 9848022338 |    50000
+      2 |     Delhi |  Bhushan | 9702866777 |    25000
+      4 |     Thane |    Pooja |      76000 | 72106777
+      3 |      Pune |      Ram |      38000 | 70066777
+
+(5 rows)
+cqlsh:birla> UPDATE emp SET emp_phone=92106777,emp_sal=28000 WHERE emp_id=5;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+----------
+      5 |    Mumbai |   Rakesh |   92106777 |    28000
+      1 | Hyderabad |      ram | 9848022338 |    50000
+      2 |     Delhi |  Bhushan | 9702866777 |    25000
+      4 |     Thane |    Pooja |      76000 | 72106777
+      3 |      Pune |      Ram |      38000 | 70066777
+
+(5 rows)
+cqlsh:birla> UPDATE emp SET emp_phone=72106777,emp_sal=76000 WHERE emp_id=4;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+----------
+      5 |    Mumbai |   Rakesh |   92106777 |    28000
+      1 | Hyderabad |      ram | 9848022338 |    50000
+      2 |     Delhi |  Bhushan | 9702866777 |    25000
+      4 |     Thane |    Pooja |   72106777 |    76000
+      3 |      Pune |      Ram |      38000 | 70066777
+
+(5 rows)
+cqlsh:birla> UPDATE emp SET emp_phone=70066777,emp_sal=38000 WHERE emp_id=3;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      5 |    Mumbai |   Rakesh |   92106777 |   28000
+      1 | Hyderabad |      ram | 9848022338 |   50000
+      2 |     Delhi |  Bhushan | 9702866777 |   25000
+      4 |     Thane |    Pooja |   72106777 |   76000
+      3 |      Pune |      Ram |   70066777 |   38000
+
+(5 rows)
+cqlsh:birla> UPDATE emp SET emp_name='Virat' WHERE emp_id=1;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      5 |    Mumbai |   Rakesh |   92106777 |   28000
+      1 | Hyderabad |    Virat | 9848022338 |   50000
+      2 |     Delhi |  Bhushan | 9702866777 |   25000
+      4 |     Thane |    Pooja |   72106777 |   76000
+      3 |      Pune |      Ram |   70066777 |   38000
+
+(5 rows)
+cqlsh:birla>
+cqlsh:birla> UPDATE emp SET emp_name='Rohit',emp_phone=98238888, emp_sal=98755, emp_city='Dadar' WHERE emp_id=5;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      5 |     Dadar |    Rohit |   98238888 |   98755
+      1 | Hyderabad |    Virat | 9848022338 |   50000
+      2 |     Delhi |  Bhushan | 9702866777 |   25000
+      4 |     Thane |    Pooja |   72106777 |   76000
+      3 |      Pune |      Ram |   70066777 |   38000
+
+(5 rows)
+
+cqlsh:birla> CREATE INDEX ON emp(emp_name);
+cqlsh:birla> select * from emp where emp_name='Rohit';
+
+ emp_id | emp_city | emp_name | emp_phone | emp_sal
+--------+----------+----------+-----------+---------
+      5 |    Dadar |    Rohit |  98238888 |   98755
+
+cqlsh:birla> CREATE INDEX ON emp(emp_phone);
+cqlsh:birla> select * from emp where emp_phone=98238888;
+
+ emp_id | emp_city | emp_name | emp_phone | emp_sal
+--------+----------+----------+-----------+---------
+      5 |    Dadar |    Rohit |  98238888 |   98755
+
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      5 |     Dadar |    Rohit |   98238888 |   98755
+      1 | Hyderabad |    Virat | 9848022338 |   50000
+      2 |     Delhi |  Bhushan | 9702866777 |   25000
+      4 |     Thane |    Pooja |   72106777 |   76000
+      3 |      Pune |      Ram |   70066777 |   38000
+
+(5 rows)
+
+cqlsh:birla> delete from emp where emp_id=3;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_name | emp_phone  | emp_sal
+--------+-----------+----------+------------+---------
+      5 |     Dadar |    Rohit |   98238888 |   98755
+      1 | Hyderabad |    Virat | 9848022338 |   50000
+      2 |     Delhi |  Bhushan | 9702866777 |   25000
+      4 |     Thane |    Pooja |   72106777 |   76000
+
+(4 rows)
+
+
+
+
+cqlsh:birla> DESC TABLES;
+
+emp
+
+
+
+cqlsh:birla> ALTER TABLE emp ADD emp_email text;
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_email | emp_name | emp_phone  | emp_sal
+--------+-----------+-----------+----------+------------+---------
+      1 | Hyderabad |      null |    Virat | 9848022338 |   50000
+      2 |     Delhi |      null |  Bhushan | 9702866777 |   25000
+      4 |     Thane |      null |    Pooja |   72106777 |   76000
+
+(3 rows)
+
+
+cqlsh:birla> select * from emp;
+
+ emp_id | emp_city  | emp_country | emp_email | emp_name | emp_phone  | emp_sal
+--------+-----------+-------------+-----------+----------+------------+---------
+      1 | Hyderabad |        null |      null |    Virat | 9848022338 |   50000
+      2 |     Delhi |        null |      null |  Bhushan | 9702866777 |   25000
+      4 |     Thane |        null |      null |    Pooja |   72106777 |   76000
+
+(3 rows)
+cqlsh:birla> ALTER TABLE emp RENAME emp_id TO id;
+cqlsh:birla> select * from emp;
+
+ id | emp_city  | emp_country | emp_email | emp_name | emp_phone  | emp_sal
+----+-----------+-------------+-----------+----------+------------+---------
+  1 | Hyderabad |        null |      null |    Virat | 9848022338 |   50000
+  2 |     Delhi |        null |      null |  Bhushan | 9702866777 |   25000
+  4 |     Thane |        null |      null |    Pooja |   72106777 |   76000
+
+(3 rows)
+cqlsh:birla>
+
+
+cqlsh:birla> select * from emp;
+
+ id | emp_city  | emp_country | emp_email | emp_name | emp_phone  | emp_sal
+----+-----------+-------------+-----------+----------+------------+---------
+  1 | Hyderabad |        null |      null |    Virat | 9848022338 |   50000
+  2 |     Delhi |        null |      null |  Bhushan | 9702866777 |   25000
+  4 |     Thane |        null |      null |    Pooja |   72106777 |   76000
+
+(3 rows)
+cqlsh:birla> ALTER TABLE emp DROP emp_country;
+cqlsh:birla> ALTER TABLE emp DROP emp_email;
+cqlsh:birla> select * from emp;
+
+ id | emp_city  | emp_name | emp_phone  | emp_sal
+----+-----------+----------+------------+---------
+  1 | Hyderabad |    Virat | 9848022338 |   50000
+  2 |     Delhi |  Bhushan | 9702866777 |   25000
+  4 |     Thane |    Pooja |   72106777 |   76000
+
+(3 rows)
+
+cqlsh> DESC keyspaces;
+
+birla  system_schema  system_auth  system  system_distributed  system_traces
+
+cqlsh:birla>  DESCRIBE COLUMNFAMILIES;
+
+cycling  emp
+
+cqlsh:birla> DESC tables;
+
+cycling  emp
+cqlsh:birla> DESC tables;
+
+cycling  emp
+
+cqlsh:birla> DROP TABLE emp;
+cqlsh:birla> DESC tables;
+
+cycling
+
+cqlsh> DESC keyspaces;
+
+birla  system_schema  system_auth  system  system_distributed  system_traces
+
+cqlsh:birla> DROP KEYSPACE birla;
+cqlsh:birla> DESC keyspaces;
+
+system_schema  system_auth  system  system_distributed  system_traces
+

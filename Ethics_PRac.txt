@@ -1,0 +1,58 @@
+##### CRUD in Mongodb
+# create db
+> use birladb
+# list db
+> db
+> show dbs
+# list collections
+> show collections
+# Create collection
+> db.createCollection("Collection_name")
+# Drop DB
+> db.dropDatabase()
+> db.mycol.find()
+> db.mycol.drop()
+> db.bds.find().pretty()
+
+# Insert records
+> db.bds.insert({"Name":"Anand","Age":23,"Address":"Thane-400612"})
+> db.bds.insert([
+   {"Name":["Sachin","Ramesh","Raj","Virat","Rahul"],
+     "Age":[23,24,34,45],
+     "City":["Mumbai","Delhi","Kolkatta","Chennai","Thane"],
+     "Gender":["Male","Female"]},
+    {"Name":["Ramesh","Raj","Rahul"],
+     "Age":[31,23,45,43],
+     "City":["Mumbai","Chennai","Thane"],
+     "Gender":["Male","Female"]}
+    ])
+
+# Update record
+> db.bds.update({"Gender":"Male"},{$set:{"Gender":"Female"}}
+> db.bds.update({"City":"Thane"},{$set:{"City":"Kalyan"}},{multi:true})
+
+# Remove records
+> db.bds.remove({"City":"Kalyan"})
+> db.bds.remove({"City":"Kalyan"},1)
+
+# Get records
+> db.bds.find({},{"Gender":1,_id:0})
+> db.bds.find({},{"City":1,_id:0}).sort({"City":1})
+> db.bds.find({},{"City":1,_id:0}).sort({"City":-1})
+
+# 
+> db.BigData.aggregate({$match:{"$and":[{"Name":{$eq:"Bhushan"}},{"Age":{$eq:34}}]}})
+> db.BigData.find({"City":{$eq:"Kalyan"}})
+> db.BigData.find({"City":{$eq:"Kalyan"}})
+> db.BigData.update({"Name":"Ramesh"},{$set:{"Name":"Virat"}})
+
+> db.BigData.update({"Age":49},{$set:{"Age":36}},{multi:true})
+> db.BigData.remove({"Name":"Sachin"})
+> db.BigData.remove({"Age":36},{multi:true})
+> db.BigData.drop()
+> db.dropDatabase()
+
+
+
+
+##### CRUD in Mongodb

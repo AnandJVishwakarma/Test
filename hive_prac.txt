@@ -1,0 +1,228 @@
+hive> show databases;
+
+hive> create database Datascience;  
+OK
+Time taken: 0.193 seconds
+
+
+hive> use datascience;
+
+
+hive> create table emp(Name String,Age int);   
+OK
+Time taken: 0.28 seconds
+
+hive> desc emp;
+OK
+name    string
+age     int
+Time taken: 0.082 seconds
+
+hive> load data local inpath '/home/training/data.txt' overwrite into table emp;  
+Copying data from file:/home/training/data.txt
+Copying file: file:/home/training/data.txt
+Loading data to table datascience.emp
+Deleted hdfs://localhost/user/hive/warehouse/datascience.db/emp
+
+
+hive> create table student(Roll BIGINT, Name STRING, City STRING, Contact BIGINT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' ;
+OK
+Time taken: 0.085 seconds
+
+
+
+
+hive> use datascience;
+OK
+Time taken: 0.011 seconds
+hive> show tables;
+OK
+emp
+student
+Time taken: 0.043 seconds
+
+
+
+
+****************input file hiveinput.txt
+1,"Bhushan","Mumbai",65433
+2,"Rajesh","Kalyan",44568
+3,"Pooja","Thane",54478
+4,"Virat","Pune",88765
+5,"Sonali","Dadar",33345
+6,"Sachin","Thane",78765
+7,"Radhika","Kalyan",33456
+8,"Rohit","Mumbai",23544
+9,"Sonia","Mulund",34324
+10,"Surya","Kalyan",75643
+*********************************
+
+
+
+
+ive> desc student;
+OK
+roll    bigint
+name    string
+city    string
+contact bigint
+
+
+load data local inpath '/home/training/hiveinput.txt' overwrite into table student; 
+Copying data from file:/home/training/hiveinput.txt
+Copying file: file:/home/training/hiveinput.txt
+Loading data to table datascience.student
+Deleted hdfs://localhost/user/hive/warehouse/datascience.db/student
+OK
+Time taken: 0.838 seconds
+
+hive> select * from student;
+OK
+1       "Bhushan"       "Mumbai"        65433
+2       "Rajesh"        "Kalyan"        44568
+3       "Pooja" "Thane" 54478
+4       "Virat" "Pune"  88765
+5       "Sonali"        "Dadar" 33345
+6       "Sachin"        "Thane" 78765
+7       "Radhika"       "Kalyan"        33456
+8       "Rohit" "Mumbai"        23544
+9       "Sonia" "Mulund"        34324
+10      "Surya" "Kalyan"        75643
+Time taken: 0.185 seconds
+
+hive> select city from student;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202305121946_0003, Tracking URL = http://localhost:50030/jobdetails.jsp?jobid=job_202305121946_0003
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -Dmapred.job.tracker=localhost:8021 -kill job_202305121946_0003
+2023-05-12 21:40:54,924 Stage-1 map = 0%,  reduce = 0%
+2023-05-12 21:40:56,939 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_202305121946_0003
+OK
+"Mumbai"
+"Kalyan"
+"Thane"
+"Pune"
+"Dadar"
+"Thane"
+"Kalyan"
+"Mumbai"
+"Mulund"
+"Kalyan"
+Time taken: 4.686 seconds
+
+hive> select name from student where contact>40000;
+
+
+hive> select name from student where contact>70000;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202305121946_0012, Tracking URL = http://localhost:50030/jobdetails.jsp?jobid=job_202305121946_0012
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -Dmapred.job.tracker=localhost:8021 -kill job_202305121946_0012
+2023-05-12 21:47:32,722 Stage-1 map = 0%,  reduce = 0%
+2023-05-12 21:47:33,727 Stage-1 map = 100%,  reduce = 0%
+2023-05-12 21:47:34,732 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_202305121946_0012
+OK
+"Virat"
+"Sachin"
+"Surya"
+Time taken: 4.302 seconds
+
+hive> select name,contact from student where roll>5;
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_202305121946_0015, Tracking URL = http://localhost:50030/jobdetails.jsp?jobid=job_202305121946_0015
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -Dmapred.job.tracker=localhost:8021 -kill job_202305121946_0015
+2023-05-12 21:50:49,229 Stage-1 map = 0%,  reduce = 0%
+2023-05-12 21:50:50,234 Stage-1 map = 100%,  reduce = 0%
+2023-05-12 21:50:52,245 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_202305121946_0015
+OK
+"Sachin"        78765
+"Radhika"       33456
+"Rohit" 23544
+"Sonia" 34324
+"Surya" 75643
+Time taken: 5.294 seconds
+
+
+hive> alter table student RENAME TO college;
+OK
+Time taken: 0.207 seconds
+
+hive> desc college;
+OK
+roll    bigint
+name    string
+city    string
+contact bigint
+Time taken: 0.064 seconds
+hive> show tables;
+OK
+college
+emp
+Time taken: 0.074 seconds
+
+ive> alter table college ADD COLUMNS(gender string);
+OK
+Time taken: 0.188 seconds
+hive> desc college;                                  
+OK
+roll    bigint
+name    string
+city    string
+contact bigint
+gender  string
+Time taken: 0.058 seconds
+
+
+hive> alter table college CHANGE contact mobile bigint;
+OK
+Time taken: 0.191 seconds
+hive> desc college;                                    
+OK
+roll    bigint
+name    string
+city    string
+mobile  bigint
+gender  string
+Time taken: 0.089 seconds
+
+
+
+
+hive> alter table college REPLACE COLUMNS(roll bigint,name string,city string,mobile bigint);
+OK
+Time taken: 0.17 seconds
+
+desc college;
+OK
+roll    bigint
+name    string
+city    string
+mobile  bigint
+Time taken: 0.087 seconds
+
+UPDATE college SET city = Pune WHERE name = Sachin;
+hive> UPDATE college SET city="Pune" WHERE name="Sachin";
+
+
+hive> drop table emp;                                    
+OK
+Time taken: 0.409 seconds
+
+hive> drop table college;
+OK
+Time taken: 0.179 seconds
+
+hive> drop database if exists datascience
+    > ;
+OK
+Time taken: 0.12 seconds
+
+
+
